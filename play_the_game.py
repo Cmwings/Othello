@@ -59,8 +59,7 @@ if __name__ == "__main__":
                         results.append(0)  
                     print("Round: {:d}/{:d}, winner is ".format(ep + 1, round_max), info["winner"])
                     break  
-        win_count=win_count + (loss_count * .6)
-        loss_count=loss_count * .4
+        
         total_games = win_count + loss_count + tie_count
         win_percentage = (win_count / total_games) * 100
         loss_percentage = (loss_count / total_games) * 100
