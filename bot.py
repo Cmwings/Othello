@@ -43,12 +43,12 @@ class DQN(nn.Module):
         self.a_dim = 64
         self.s_dim = 64
         self.device = device
-        self.gamma = 0.01  
+        self.gamma = 0.95  
         self.alpha1 = 0.01
         self.alpha2 = 0.01 
         self.epsilon_max = 1.0
         self.batch_size = 64
-        self.epsilon_increment = 0.9 
+        self.epsilon_increment = 0.0005
         self.epsilon = 0 if self.epsilon_increment is not None else self.epsilon_max
        
         self.learn_step_counter = 0  
