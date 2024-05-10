@@ -7,16 +7,17 @@ from bot import DQN
 import copy
 import numpy as np
 
-
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 if __name__ == "__main__":
     white_checkpoint = "White_Model"  
     black_checkpoint = "Black_Model"  
     
+    # Initialize White and Black agents
     agent_White = DQN("White", device=device).to(device)
     agent_Black = DQN("Black", device=device).to(device)
     
+    # Load pre-trained models if available
     if os.path.exists(white_checkpoint):
         agent_White.load_model(white_checkpoint)
     if os.path.exists(black_checkpoint):
@@ -26,11 +27,11 @@ if __name__ == "__main__":
     winning_rate = []
     best_model, best_winning_rate = None, 0.
     is_White = []
-    max_epoch = 1000
+    max_epoch = 10000
     dominant_counter_white = 0
     RENDER = False
     
-    
+    # Training loop
     for ep in range(1, max_epoch + 1):
         ep_reward = []
         obs, info = env.reset()
@@ -67,7 +68,7 @@ if __name__ == "__main__":
                 is_White.append(True if info["winner"] == "White" else False)
                 break
         
-
+        # Update winning rate and check for model dominance
         if ep % 20 == 0:
             winning_rate.append(np.mean(is_White))
             is_White = []
@@ -83,13 +84,14 @@ if __name__ == "__main__":
                 dominant_counter_white = 0
                 agent_Black.weights_assign(agent_White.brain_evl)
               
+    # Save trained models
     agent_White.save_model("White_Model")
     agent_Black.save_model("Black_Model")
     best_model.save_model("Best_Model")
 
+    # Plot winning rate
     plt.plot(range(20, max_epoch + 1, 20), winning_rate, color='green') 
     plt.ylabel('Win Ratio')
     plt.xlabel('Episode')
     plt.title('Winning Rate Over Episodes')
     plt.show()
-    
